@@ -4,5 +4,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 ARG CORE_PORT
 EXPOSE ${CORE_PORT}
-COPY . .
+COPY . /code/
+ENV PYTHONPATH=/code
 CMD python -u main.py
