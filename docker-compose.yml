@@ -13,9 +13,22 @@ services:
     env_file: .env
     ports:
       - ${CORE_PORT}:${CORE_PORT}
+    depends_on:
+      - postgres-db
     networks:
       - api-network
 
+  postgres-db:
+    container_name: postgres-db
+    image: postgres
+    restart: always
+    volumes:
+      - /var/lib/pgdata:/var/lib/postgresql/data
+    env_file: .env
+    ports:
+      - ${POSTGRES_EXTERNAL_PORT}:${POSTGRES_PORT}
+    networks:
+      - api-network
 networks:
   api-network:
     driver: bridge

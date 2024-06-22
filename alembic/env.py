@@ -17,14 +17,14 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 
-from api.models.product import Product
-from api.models.category import Category
-from api.models.user import User
-from api.models.shopping_cart import ShoppingCart
-from api.models.purchase import Purchase
-from api.models.finished_purchase import FinishedPurchase
+from src.api.models.product import Product
+from src.api.models.category import Category
+from src.api.models.user import User
+from src.api.models.shopping_cart import ShoppingCart
+from src.api.models.purchase import Purchase
+from src.api.models.finished_purchase import FinishedPurchase
 
-from shared.database import Base
+from src.shared.database import Base
 
 target_metadata = Base.metadata
 

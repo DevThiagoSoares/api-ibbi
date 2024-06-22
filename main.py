@@ -5,11 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
-from shared import security
-from shared.dependencies import get_db
-from api.routes import auth, categories, products, shopping_cart, purchase, dashboard
-from api.models.user import User
-from shared.security import get_password_hash
+from src.shared import security
+from src.shared.dependencies import get_db
+from src.api.routes import auth, categories, products, shopping_cart, purchase, dashboard
+from src.api.models.user import User
+from src.shared.security import get_password_hash
 
 load_dotenv()
 DEFAULT_EMAIL = os.getenv('DEFAULT_EMAIL')
