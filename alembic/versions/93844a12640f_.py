@@ -1,8 +1,8 @@
 """
 
-Revision ID: 6e9c31351b8a
+Revision ID: 93844a12640f
 Revises: 
-Create Date: 2024-06-18 00:52:32.860904
+Create Date: 2024-06-22 17:42:08.905249
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '6e9c31351b8a'
+revision: str = '93844a12640f'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -35,6 +35,13 @@ def upgrade() -> None:
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+    op.create_table('finished_purchases',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_finished_purchases_id'), 'finished_purchases', ['id'], unique=False)
     op.create_table('products',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
@@ -55,7 +62,13 @@ def upgrade() -> None:
     op.create_index(op.f('ix_shopping_carts_id'), 'shopping_carts', ['id'], unique=False)
     op.create_table('purchases',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('product_id', sa.Integer(), nullable=True),
+    sa.Column('quantity', sa.Integer(), nullable=False),
     sa.Column('shopping_cart_id', sa.Integer(), nullable=True),
+    sa.Column('date_time', sa.DateTime(), nullable=True),
+    sa.Column('finished_purchase_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['finished_purchase_id'], ['finished_purchases.id'], ),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.ForeignKeyConstraint(['shopping_cart_id'], ['shopping_carts.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -70,6 +83,8 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_shopping_carts_id'), table_name='shopping_carts')
     op.drop_table('shopping_carts')
     op.drop_table('products')
+    op.drop_index(op.f('ix_finished_purchases_id'), table_name='finished_purchases')
+    op.drop_table('finished_purchases')
     op.drop_table('users')
     op.drop_table('categories')
     # ### end Alembic commands ###

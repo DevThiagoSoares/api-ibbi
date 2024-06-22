@@ -2,9 +2,11 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
+from src.shared.database import Base
 from src.shared import security
 from src.shared.dependencies import get_db
 from src.api.routes import auth, categories, products, shopping_cart, purchase, dashboard
@@ -17,6 +19,12 @@ DEFAULT_PASSWORD = os.getenv('DEFAULT_PASSWORD')
 DEFAULT_USERNAME = os.getenv('DEFAULT_USERNAME')
 CORE_PORT = int(os.getenv('CORE_PORT'))
 CORE_HOST = os.getenv('CORE_HOST')
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+
+
+engine = create_engine(DATABASE_URL)
+
 
 def create_default_user(db: Session):
     default_username = DEFAULT_USERNAME
@@ -52,6 +60,8 @@ app.add_middleware(
     allow_methods=["*"],  
     allow_headers=["*"],
 )
+
+Base.metadata.create_all(bind=engine)
 
 # Routers
 app.include_router(auth.router)
