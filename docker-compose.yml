@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  ibbi-api:
+    container_name: ibbi-api
+    build:
+      context: .
+      args:
+        - PORT=${CORE_PORT}
+    restart: always
+    volumes:
+      - ./src:/code/src
+    env_file: .env
+    ports:
+      - ${CORE_PORT}:${CORE_PORT}
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    driver: bridge

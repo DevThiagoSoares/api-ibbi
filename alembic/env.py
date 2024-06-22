@@ -17,11 +17,12 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 
-from stock.models.product import Product
-from stock.models.category import Category
-from stock.models.user import User
-from stock.models.shopping_cart import ShoppingCart
-from stock.models.purchase import Purchase
+from api.models.product import Product
+from api.models.category import Category
+from api.models.user import User
+from api.models.shopping_cart import ShoppingCart
+from api.models.purchase import Purchase
+from api.models.finished_purchase import FinishedPurchase
 
 from shared.database import Base
 

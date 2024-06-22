@@ -3,18 +3,20 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from contextlib import asynccontextmanager
 
 from shared import security
 from shared.dependencies import get_db
-from stock.routes import auth, categories, products, shopping_cart, purchase, dashboard
-from stock.models.user import User
+from api.routes import auth, categories, products, shopping_cart, purchase, dashboard
+from api.models.user import User
 from shared.security import get_password_hash
 
 load_dotenv()
-DEFAULT_EMAIL=os.getenv('DEFAULT_EMAIL')
-DEFAULT_PASSWORD=os.getenv('DEFAULT_PASSWORD')
-DEFAULT_USERNAME= os.getenv('DEFAULT_USERNAME')
-CORE_PORT=int(os.getenv('CORE_PORT'))
+DEFAULT_EMAIL = os.getenv('DEFAULT_EMAIL')
+DEFAULT_PASSWORD = os.getenv('DEFAULT_PASSWORD')
+DEFAULT_USERNAME = os.getenv('DEFAULT_USERNAME')
+CORE_PORT = int(os.getenv('CORE_PORT'))
+CORE_HOST = os.getenv('CORE_HOST')
 
 def create_default_user(db: Session):
     default_username = DEFAULT_USERNAME
@@ -35,14 +37,13 @@ def create_default_user(db: Session):
         db.refresh(new_user)
         print(f"Default user created: {default_username}")
 
-
-async def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     db: Session = next(get_db())
     create_default_user(db)
+    yield
 
-
-app = FastAPI()
-
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -52,21 +53,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
-
-@app.on_event("startup")
-async def startup_event():
-    await startup()
-
-# routers
+# Routers
 app.include_router(auth.router)
 app.include_router(categories.router, dependencies=[Depends(security.get_current_user)])
 app.include_router(products.router, dependencies=[Depends(security.get_current_user)])
 app.include_router(shopping_cart.router, dependencies=[Depends(security.get_current_user)])
 app.include_router(purchase.router, dependencies=[Depends(security.get_current_user)])
-app.include_router(dashboard.router,  dependencies=[Depends(security.get_current_user)])
+app.include_router(dashboard.router, dependencies=[Depends(security.get_current_user)])
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=CORE_PORT)
+    uvicorn.run(app, host=CORE_HOST, port=CORE_PORT)

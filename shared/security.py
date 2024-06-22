@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 
 from shared.dependencies import get_db
-from stock.models.user import User
+from api.models.user import User
 
 load_dotenv()
 
