@@ -25,7 +25,7 @@ class DashboardService:
             recent_sales.append(RecentSale(
                 product_name=row[0],
                 quantity=row[1],
-                date_time=str(row[2]),
+                date_time = row[2].strftime("%d/%m/%Y %H:%Mh"),
                 user_name=row[3],
                 price=row[4],
                 total_price=row[5]

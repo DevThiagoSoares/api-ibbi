@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session, selectinload
 from src.api.models.shopping_cart import ShoppingCart
 from src.api.models.finished_purchase import FinishedPurchase
@@ -14,8 +15,10 @@ class PurchaseRepository:
             .first()
         )
 
-    def create_finished_purchase(self, user_id: int, purchases: list):
+    def create_finished_purchase(self, user_id: int, purchases: list, date_time: datetime):
         finished_purchase = FinishedPurchase(user_id=user_id, purchases=purchases)
+        for purchase in purchases:
+            purchase.date_time = date_time
         self.db.add(finished_purchase)
         self.db.commit()
         return finished_purchase
