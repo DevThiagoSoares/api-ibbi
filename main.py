@@ -73,4 +73,4 @@ app.include_router(dashboard.router, dependencies=[Depends(security.get_current_
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=CORE_HOST, port=CORE_PORT)
+    uvicorn.run(app, port=CORE_PORT)
