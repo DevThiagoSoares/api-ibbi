@@ -23,7 +23,7 @@ services:
     image: postgres
     restart: always
     volumes:
-      - /var/lib/pgdata:/var/lib/postgresql/data
+      - ibbi:/var/lib/postgresql/data
     env_file: .env
     ports:
       - ${POSTGRES_PORT}:5432
@@ -33,3 +33,6 @@ services:
 networks:
   api-network:
     driver: bridge
+
+volumes:
+  ibbi:
