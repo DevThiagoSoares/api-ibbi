@@ -14,19 +14,19 @@ services:
     ports:
       - ${CORE_PORT}:${CORE_PORT}
     depends_on:
-      - postgres-db
+      - postgres-db-ibbi
     networks:
       - api-network
 
-  postgres-db:
-    container_name: postgres-db
+  postgres-db-ibbi:
+    container_name: postgres-db-ibbi
     image: postgres
     restart: always
     volumes:
       - /var/lib/pgdata:/var/lib/postgresql/data
     env_file: .env
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${POSTGRES_PORT}:5432
     networks:
       - api-network
 

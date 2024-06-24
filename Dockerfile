@@ -6,4 +6,4 @@ ARG CORE_PORT
 EXPOSE ${CORE_PORT}
 COPY . /code/
 ENV PYTHONPATH=/code
-CMD python -u main.py
+CMD ["sh", "-c", "alembic upgrade head && python -u main.py"]
