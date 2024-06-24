@@ -31,7 +31,7 @@ Para rodar o projeto com Docker, siga os passos abaixo:
 
 2. **Construa e inicie os containers com Docker Compose:**
     ```
-    docker-compose up --build
+    docker compose up --build
     ```
 
 3. **Acesse a aplicação:**
